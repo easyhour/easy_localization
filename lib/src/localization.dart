@@ -20,11 +20,14 @@ class Localization {
   };
 
   bool _useFallbackTranslationsForEmptyResources = false;
+  bool _forcePluralCaseFallback = false;
 
   Localization();
 
   static Localization? _instance;
+
   static Localization get instance => _instance ?? (_instance = Localization());
+
   static Localization? of(BuildContext context) =>
       Localizations.of<Localization>(context, Localization);
 
@@ -33,12 +36,14 @@ class Localization {
     Translations? translations,
     Translations? fallbackTranslations,
     bool useFallbackTranslationsForEmptyResources = false,
+    bool forcePluralCaseFallback = false,
   }) {
     instance._locale = locale;
     instance._translations = translations;
     instance._fallbackTranslations = fallbackTranslations;
     instance._useFallbackTranslationsForEmptyResources =
         useFallbackTranslationsForEmptyResources;
+    instance._forcePluralCaseFallback = forcePluralCaseFallback;
     return translations == null ? false : true;
   }
 
@@ -114,6 +119,9 @@ class Localization {
   }
 
   static PluralRule? _pluralRule(String? locale, num howMany) {
+    if (instance._forcePluralCaseFallback) {
+      return () => _pluralCaseFallback(howMany);
+    }
     startRuleEvaluation(howMany);
     return pluralRules[locale];
   }
@@ -139,11 +147,11 @@ class Localization {
     String? name,
     NumberFormat? format,
   }) {
-
     late String res;
 
     final pluralRule = _pluralRule(_locale.languageCode, value);
-    final pluralCase = pluralRule != null ? pluralRule() : _pluralCaseFallback(value);
+    final pluralCase =
+        pluralRule != null ? pluralRule() : _pluralCaseFallback(value);
 
     switch (pluralCase) {
       case PluralCase.ZERO:
@@ -186,7 +194,8 @@ class Localization {
     if (subKey == 'other') return _resolve('$key.other');
 
     final tag = '$key.$subKey';
-    var resource = _resolve(tag, logging: false, fallback: _fallbackTranslations != null);
+    var resource =
+        _resolve(tag, logging: false, fallback: _fallbackTranslations != null);
     if (resource == tag) {
       resource = _resolve('$key.other');
     }

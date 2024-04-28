@@ -63,6 +63,21 @@ class EasyLocalization extends StatefulWidget {
   /// ```
   final bool useFallbackTranslationsForEmptyResources;
 
+  /// Force use of plural strings for all languages. This will still fallback
+  /// to "other" if the specific rule isn't defined.
+  /// @Default value false
+  /// Example:
+  /// ```
+  /// // Default behavior, will use "zero" rule for 0 only if the language
+  /// // is set to do so (e.g. for "lt" but not for "en").
+  /// forcePluralCaseFallback: false
+  /// // Force using "zero" rule for 0 even if the language doesn't use it
+  /// // by default (e.g. "en"). If "zero" localization for that string
+  /// // doesn't exist, "other" is still used as fallback.
+  /// forcePluralCaseFallback: true
+  /// ```
+  final bool forcePluralCaseFallback;
+
   /// Path to your folder with localization files.
   /// Example:
   /// ```dart
@@ -117,6 +132,7 @@ class EasyLocalization extends StatefulWidget {
     this.useOnlyLangCode = false,
     this.useFallbackTranslations = false,
     this.useFallbackTranslationsForEmptyResources = false,
+    this.forcePluralCaseFallback = false,
     this.assetLoader = const RootBundleAssetLoader(),
     this.extraAssetLoaders,
     this.saveLocale = true,
@@ -198,6 +214,7 @@ class _EasyLocalizationState extends State<EasyLocalization> {
         supportedLocales: widget.supportedLocales,
         useFallbackTranslationsForEmptyResources:
             widget.useFallbackTranslationsForEmptyResources,
+        forcePluralCaseFallback: widget.forcePluralCaseFallback,
       ),
     );
   }
@@ -243,6 +260,7 @@ class _EasyLocalizationProvider extends InheritedWidget {
 
   /// Get fallback locale
   Locale? get fallbackLocale => parent.fallbackLocale;
+
   // Locale get startLocale => parent.startLocale;
 
   /// Change app locale
@@ -278,12 +296,14 @@ class _EasyLocalizationDelegate extends LocalizationsDelegate<Localization> {
   final List<Locale>? supportedLocales;
   final EasyLocalizationController? localizationController;
   final bool useFallbackTranslationsForEmptyResources;
+  final bool forcePluralCaseFallback;
 
   ///  * use only the lang code to generate i18n file path like en.json or ar.json
   // final bool useOnlyLangCode;
 
   _EasyLocalizationDelegate({
     required this.useFallbackTranslationsForEmptyResources,
+    this.forcePluralCaseFallback = false,
     this.localizationController,
     this.supportedLocales,
   }) {
@@ -306,6 +326,7 @@ class _EasyLocalizationDelegate extends LocalizationsDelegate<Localization> {
       fallbackTranslations: localizationController!.fallbackTranslations,
       useFallbackTranslationsForEmptyResources:
           useFallbackTranslationsForEmptyResources,
+      forcePluralCaseFallback: forcePluralCaseFallback,
     );
     return Future.value(Localization.instance);
   }
