@@ -1,0 +1,4 @@
+{
+  "pushed": "You have pushed the button this many times:",
+  "nTimes": "{count, plural, =0{never} =1{once} other{{count} times}}"
+}
