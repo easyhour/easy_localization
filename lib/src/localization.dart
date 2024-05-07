@@ -36,7 +36,7 @@ class Localization {
     Translations? translations,
     Translations? fallbackTranslations,
     bool useFallbackTranslationsForEmptyResources = false,
-    bool ignorePluralRules = false,
+    bool ignorePluralRules = true,
   }) {
     instance._locale = locale;
     instance._translations = translations;
@@ -119,7 +119,7 @@ class Localization {
   }
 
   static PluralRule? _pluralRule(String? locale, num howMany) {
-    if (!instance._ignorePluralRules) {
+    if (instance._ignorePluralRules) {
       return () => _pluralCaseFallback(howMany);
     }
     startRuleEvaluation(howMany);

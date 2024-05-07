@@ -73,13 +73,13 @@ class EasyLocalization extends StatefulWidget {
   /// // "nTimes": "{count, plural, =0{never} =1{once} other{{count} times}}"
   /// // Text(AppLocalizations.of(context)!.nTimes(_counter)),
   /// // will print "never, once, 2 times" for ALL languages.
-  /// ignorePluralRules: false
+  /// ignorePluralRules: true
   /// // Use "zero" rule for 0 only if the language is set to do so (e.g. for
   /// "lt" but not for "en").
   /// // "nTimes": "{count, plural, =0{never} =1{once} other{{count} times}}"
   /// // Text(AppLocalizations.of(context)!.nTimes(_counter)),
   /// // will print "never, once, 2 times" ONLY for languages with plural rules.
-  /// ignorePluralRules: true
+  /// ignorePluralRules: false
   /// ```
   final bool ignorePluralRules;
 
@@ -137,7 +137,7 @@ class EasyLocalization extends StatefulWidget {
     this.useOnlyLangCode = false,
     this.useFallbackTranslations = false,
     this.useFallbackTranslationsForEmptyResources = false,
-    this.ignorePluralRules = false,
+    this.ignorePluralRules = true,
     this.assetLoader = const RootBundleAssetLoader(),
     this.extraAssetLoaders,
     this.saveLocale = true,
@@ -308,7 +308,7 @@ class _EasyLocalizationDelegate extends LocalizationsDelegate<Localization> {
 
   _EasyLocalizationDelegate({
     required this.useFallbackTranslationsForEmptyResources,
-    this.ignorePluralRules = false,
+    this.ignorePluralRules = true,
     this.localizationController,
     this.supportedLocales,
   }) {

@@ -48,7 +48,7 @@ void main() {
       Localization.load(const Locale('en'),
           translations: r.translations,
           fallbackTranslations: r.fallbackTranslations,
-          ignorePluralRules: true);
+          ignorePluralRules: false);
       expect(Localization.instance.plural('hat', 2), 'other hats');
       expect(Localization.instance.plural('hat', 0), 'other hats');
       expect(Localization.instance.plural('hat', 3), 'other hats');
@@ -70,7 +70,7 @@ void main() {
       Localization.load(const Locale('ru'),
           translations: r.translations,
           fallbackTranslations: r.fallbackTranslations,
-          ignorePluralRules: true);
+          ignorePluralRules: false);
       expect(Localization.instance.plural('hat', 2), 'few hats');
       expect(Localization.instance.plural('hat', 3), 'few hats');
     });
@@ -85,7 +85,7 @@ void main() {
       Localization.load(const Locale('ru'),
           translations: r.translations,
           fallbackTranslations: r.fallbackTranslations,
-          ignorePluralRules: true);
+          ignorePluralRules: false);
       expect(Localization.instance.plural('hat', 0), 'many hats');
       expect(Localization.instance.plural('hat', 5), 'many hats');
     });
