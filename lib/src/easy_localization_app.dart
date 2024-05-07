@@ -63,20 +63,25 @@ class EasyLocalization extends StatefulWidget {
   /// ```
   final bool useFallbackTranslationsForEmptyResources;
 
-  /// Force use of plural strings for all languages. This will still fallback
-  /// to "other" if the specific rule isn't defined.
+  /// Ignore usage of plural strings for languages that do not use plural rules.
   /// @Default value false
   /// Example:
   /// ```
-  /// // Default behavior, will use "zero" rule for 0 only if the language
-  /// // is set to do so (e.g. for "lt" but not for "en").
-  /// forcePluralCaseFallback: false
-  /// // Force using "zero" rule for 0 even if the language doesn't use it
-  /// // by default (e.g. "en"). If "zero" localization for that string
+  /// // Default behavior, use "zero" rule for 0 even if the language doesn't
+  /// // use it by default (e.g. "en"). If "zero" localization for that string
   /// // doesn't exist, "other" is still used as fallback.
-  /// forcePluralCaseFallback: true
+  /// // "nTimes": "{count, plural, =0{never} =1{once} other{{count} times}}"
+  /// // Text(AppLocalizations.of(context)!.nTimes(_counter)),
+  /// // will print "never, once, 2 times" for ALL languages.
+  /// ignorePluralRules: false
+  /// // Use "zero" rule for 0 only if the language is set to do so (e.g. for
+  /// "lt" but not for "en").
+  /// // "nTimes": "{count, plural, =0{never} =1{once} other{{count} times}}"
+  /// // Text(AppLocalizations.of(context)!.nTimes(_counter)),
+  /// // will print "never, once, 2 times" ONLY for languages with plural rules.
+  /// ignorePluralRules: true
   /// ```
-  final bool forcePluralCaseFallback;
+  final bool ignorePluralRules;
 
   /// Path to your folder with localization files.
   /// Example:
@@ -132,7 +137,7 @@ class EasyLocalization extends StatefulWidget {
     this.useOnlyLangCode = false,
     this.useFallbackTranslations = false,
     this.useFallbackTranslationsForEmptyResources = false,
-    this.forcePluralCaseFallback = false,
+    this.ignorePluralRules = false,
     this.assetLoader = const RootBundleAssetLoader(),
     this.extraAssetLoaders,
     this.saveLocale = true,
@@ -214,7 +219,7 @@ class _EasyLocalizationState extends State<EasyLocalization> {
         supportedLocales: widget.supportedLocales,
         useFallbackTranslationsForEmptyResources:
             widget.useFallbackTranslationsForEmptyResources,
-        forcePluralCaseFallback: widget.forcePluralCaseFallback,
+        ignorePluralRules: widget.ignorePluralRules,
       ),
     );
   }
@@ -296,14 +301,14 @@ class _EasyLocalizationDelegate extends LocalizationsDelegate<Localization> {
   final List<Locale>? supportedLocales;
   final EasyLocalizationController? localizationController;
   final bool useFallbackTranslationsForEmptyResources;
-  final bool forcePluralCaseFallback;
+  final bool ignorePluralRules;
 
   ///  * use only the lang code to generate i18n file path like en.json or ar.json
   // final bool useOnlyLangCode;
 
   _EasyLocalizationDelegate({
     required this.useFallbackTranslationsForEmptyResources,
-    this.forcePluralCaseFallback = false,
+    this.ignorePluralRules = false,
     this.localizationController,
     this.supportedLocales,
   }) {
@@ -326,7 +331,7 @@ class _EasyLocalizationDelegate extends LocalizationsDelegate<Localization> {
       fallbackTranslations: localizationController!.fallbackTranslations,
       useFallbackTranslationsForEmptyResources:
           useFallbackTranslationsForEmptyResources,
-      forcePluralCaseFallback: forcePluralCaseFallback,
+      ignorePluralRules: ignorePluralRules,
     );
     return Future.value(Localization.instance);
   }

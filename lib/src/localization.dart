@@ -20,7 +20,7 @@ class Localization {
   };
 
   bool _useFallbackTranslationsForEmptyResources = false;
-  bool _forcePluralCaseFallback = false;
+  bool _ignorePluralRules = false;
 
   Localization();
 
@@ -36,14 +36,14 @@ class Localization {
     Translations? translations,
     Translations? fallbackTranslations,
     bool useFallbackTranslationsForEmptyResources = false,
-    bool forcePluralCaseFallback = false,
+    bool ignorePluralRules = false,
   }) {
     instance._locale = locale;
     instance._translations = translations;
     instance._fallbackTranslations = fallbackTranslations;
     instance._useFallbackTranslationsForEmptyResources =
         useFallbackTranslationsForEmptyResources;
-    instance._forcePluralCaseFallback = forcePluralCaseFallback;
+    instance._ignorePluralRules = ignorePluralRules;
     return translations == null ? false : true;
   }
 
@@ -119,7 +119,7 @@ class Localization {
   }
 
   static PluralRule? _pluralRule(String? locale, num howMany) {
-    if (instance._forcePluralCaseFallback) {
+    if (!instance._ignorePluralRules) {
       return () => _pluralCaseFallback(howMany);
     }
     startRuleEvaluation(howMany);
