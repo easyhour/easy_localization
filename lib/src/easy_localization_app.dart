@@ -284,6 +284,7 @@ class _EasyLocalizationProvider extends InheritedWidget {
 
   /// Getting device locale from platform
   Locale get deviceLocale => _localeState.deviceLocale;
+  Locale? get savedLocale => _localeState.savedLocale;
 
   /// Reset locale to platform locale
   Future<void> resetLocale() => _localeState.resetLocale();
